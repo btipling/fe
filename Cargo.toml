@@ -1,0 +1,7 @@
+[package]
+name = "fe"
+version = "0.1.0"
+authors = ["Bjorn Tipling <bjorn@ambientchill.com>"]
+
+[dependencies]
+clap = { version = "~2.19.0", features = ["yaml"] }

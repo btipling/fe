@@ -1,0 +1,13 @@
+name: fe
+version: "1.0"
+author: Bjorn Tipling <bjorn@ambientchill.com>
+about: Helps you find files with a fuzzy search.
+args:
+    - insensitive:
+        short: i
+        long: insensitive
+        help: Sets the filename pattern to be case sensitive
+    - input:
+        help: Sets the pattern to search for
+        required: true
+        index: 1
