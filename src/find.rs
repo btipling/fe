@@ -10,14 +10,10 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
     }
 
     let entry_path = path::Path::new("./");
-
     let mut found_files: Vec<path::PathBuf> = vec![];
-
     traverse(input, &entry_path, &mut found_files);
 
-
     if verbose { println!("Found files:"); }
-
     for file in found_files {
         println!("{}", file.to_str().unwrap());
     }
@@ -55,11 +51,9 @@ fn path_matches_search(path_str: &str, input: &str) -> bool {
     let mut input_chars = input.chars();
     // `input` is guaranteed to be greater than 0 chars long.
     let mut current_input_char = input_chars.next().unwrap();
-
     let mut matching_current_word = true;
 
     for current_path_char in path_str.chars() {
-
         if !current_path_char.is_alphanumeric() {
             // Potentially starting a new word.
             matching_current_word = true;
