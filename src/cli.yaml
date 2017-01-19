@@ -7,6 +7,10 @@ args:
         short: i
         long: insensitive
         help: Sets the filename pattern to be case sensitive
+    - verbose:
+        short: v
+        long: verbose
+        help: Print additional debug information.
     - input:
         help: Sets the pattern to search for
         required: true
