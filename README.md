@@ -5,7 +5,7 @@ Fuzzy file finder in rust
 ## Usage:
 
 fe finds files by unicode alpha-numeric characters. It works much like IntelliJ's fuzzy file opener.
-Searches start matching at word start, stop matching until the next word. Words are separated by non-alphanumeric characters.
+Searches start matching at word start, and on match failure stop matching until the next word. Words are separated by non-alphanumeric characters.
 
 This finds main.rs because `m` matches the first word of `main` and `rs` matches the extension from the start.
 ```sh
