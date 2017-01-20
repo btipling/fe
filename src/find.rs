@@ -5,10 +5,7 @@ fn make_case_insensitive(input: &str, insensitive: bool) -> String {
     if !insensitive {
         return String::from(input)
     }
-    let s = input
-        .to_lowercase()
-        .to_owned();
-    s
+    input.to_lowercase()
 }
 
 pub fn find (input: &str, insensitive: bool, verbose: bool) {
