@@ -20,7 +20,6 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
     let search = &s[..];
 
     let mut dirs = vec![path::PathBuf::from("./")];
-
     loop {
         let current_path = match dirs.pop() {
             Some(p) => { p },
@@ -28,12 +27,10 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
         };
 
         let listings = current_path.read_dir().unwrap();
-
         for listing in listings {
             let entity: fs::DirEntry = listing.unwrap();
             let path_buffer = entity.path();
             let path = path_buffer;
-
             {
                 let path_str = path.to_str().unwrap();
                 let s = make_case_insensitive(path_str, insensitive);
@@ -41,11 +38,9 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
                     println!("{}", path_str);
                 }
             }
-
             if path.is_dir() {
                 dirs.push(path);
             }
-
         }
     }
 
@@ -86,6 +81,5 @@ fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
             matching_current_word = false;
         }
     }
-
     false
 }
