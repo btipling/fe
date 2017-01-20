@@ -6,7 +6,7 @@ args:
     - insensitive:
         short: i
         long: insensitive
-        help: Sets the filename pattern to be case sensitive
+        help: Sets the filename pattern to be case insensitive
     - verbose:
         short: v
         long: verbose

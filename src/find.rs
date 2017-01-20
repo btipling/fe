@@ -1,6 +1,16 @@
 use std::fs;
 use std::path;
 
+fn make_case_insensitive(input: &str, insensitive: bool) -> String {
+    if !insensitive {
+        return String::from(input)
+    }
+    let s = input
+        .to_lowercase()
+        .to_owned();
+    s
+}
+
 pub fn find (input: &str, insensitive: bool, verbose: bool) {
     if verbose { println!("Looking for: {}, insensitive: {}", input, insensitive); }
 
@@ -9,44 +19,44 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
         return;
     }
 
-    let entry_path = path::Path::new("./");
-    let mut found_files: Vec<path::PathBuf> = vec![];
-    traverse(input, &entry_path, &mut found_files);
+    let s = make_case_insensitive(input, insensitive);
+    let search = &s[..];
 
-    if verbose { println!("Found files:"); }
-    for file in found_files {
-        println!("{}", file.to_str().unwrap());
+    let mut dirs = vec![path::PathBuf::from("./")];
+
+    loop {
+        let current_path = match dirs.pop() {
+            Some(p) => { p },
+            None => { return; }
+        };
+
+        let listings = current_path.read_dir().unwrap();
+
+        for listing in listings {
+            let entity: fs::DirEntry = listing.unwrap();
+            let path_buffer = entity.path();
+            let path = path_buffer;
+
+            {
+                let path_str = path.to_str().unwrap();
+                let s = make_case_insensitive(path_str, insensitive);
+                if path_matches_search(&s[..], search, verbose) {
+                    println!("{}", path_str);
+                }
+            }
+
+            if path.is_dir() {
+                dirs.push(path);
+            }
+
+        }
     }
 
 }
 
-pub fn traverse(input: &str, current_path: &path::Path, found_files: &mut Vec<path::PathBuf>) {
+fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
 
-    if !current_path.is_dir() {
-        return;
-    }
-    let listings = current_path.read_dir().unwrap();
-
-    for listing in listings {
-        let entity: fs::DirEntry = listing.unwrap();
-        let path_buffer = entity.path();
-        let path = path_buffer.as_path();
-
-        if path.is_dir() {
-            traverse(input, &path, found_files);
-        }
-
-        let path_str = path.to_str().unwrap();
-        if path_matches_search(&path_str,/**/ input) {
-            found_files.push(entity.path());
-        }
-    }
-}
-
-fn path_matches_search(path_str: &str, input: &str) -> bool {
-    if input.len() > path_str.len() {
-        return false;
-    }
+    if verbose { println!("Matching {} against {}", path_str, input); }
 
     let mut input_chars = input.chars();
     // `input` is guaranteed to be greater than 0 chars long.
