@@ -56,11 +56,11 @@ fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
     let mut matching_current_word = true;
 
     for current_path_char in path_str.chars() {
-        if !current_path_char.is_alphanumeric() {
+        let is_alphanumeric = current_path_char.is_alphanumeric();
+        if !is_alphanumeric {
             // Potentially starting a new word.
             matching_current_word = true;
             // We're not matching non-alphanumeric so continue.
-            continue;
         }
 
         if !matching_current_word {
@@ -77,7 +77,7 @@ fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
                     return true;
                 }
             }
-        } else {
+        } else if is_alphanumeric {
             matching_current_word = false;
         }
     }
