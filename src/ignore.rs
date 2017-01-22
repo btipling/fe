@@ -8,7 +8,6 @@ use std::fs;
 
 #[derive(Clone)]
 pub struct RuleSet {
-    verbose: bool,
     rules: Vec<RuleSetPattern>,
 }
 
@@ -47,23 +46,21 @@ impl RuleSetPattern {
 
 impl RuleSet {
 
-    pub fn new_default(verbose: bool) -> RuleSet {
+    pub fn new_default() -> RuleSet {
         let mut rules: Vec<RuleSetPattern> = vec![];
         match RuleSetPattern::new(".git/") {
             Ok(r) => rules.push(r),
             _ => (),
         }
         RuleSet {
-            verbose: verbose,
             rules: rules
         }
     }
 
-    pub fn new (ignore_path: &path::Path, verbose: bool) -> Result<RuleSet, IgnoreError> {
-        if verbose { println!("Checking if {:?} is an ignore file.", ignore_path) }
+    pub fn new (ignore_path: &path::Path, options: &super::Options) -> Result<RuleSet, IgnoreError> {
 
         let f = try!(fs::File::open(ignore_path).map_err(IgnoreError::Io));
-        if verbose { println!("{:?} is an ignore file.", ignore_path) }
+        if options.verbose { println!("Found {:?} an ignore file.", ignore_path) }
 
         let buffer = io::BufReader::new(&f);
         let mut rules: Vec<RuleSetPattern> = vec![];
@@ -73,23 +70,22 @@ impl RuleSet {
                 Ok(r) => r,
                 _ => continue // TODO: support ! rule negations.
             };
-            if verbose { println!("Found rule: {}.", l) }
+            if options.verbose { println!("Found rule: {}.", l) }
             rules.push(r);
         }
 
         Ok(RuleSet {
-            verbose: verbose,
             rules: rules
         })
     }
 
-    pub fn extend (rule_set: &RuleSet, ignore_path: &path::Path, verbose: bool) -> Result<RuleSet, IgnoreError> {
-        let mut new_set = try!(RuleSet::new(ignore_path, verbose));
+    pub fn extend (rule_set: &RuleSet, ignore_path: &path::Path, options: &super::Options) -> Result<RuleSet, IgnoreError> {
+        let mut new_set = try!(RuleSet::new(ignore_path, options));
         new_set.rules.extend(rule_set.rules.clone());
         Ok(new_set)
     }
 
-    pub fn is_excluded (&self, path: &str, is_dir: bool) -> bool {
+    pub fn is_excluded (&self, path: &str, is_dir: bool, options: &super::Options) -> bool {
         for rule_set_pattern in &self.rules {
             if rule_set_pattern.is_dir && !is_dir {
                 continue;
@@ -100,10 +96,10 @@ impl RuleSet {
                 require_literal_leading_dot: false
             };
             if rule_set_pattern.pattern.matches_with(path, &match_options) {
-                if self.verbose { println!("{} is ignored because it matches {}", path, rule_set_pattern.pattern) }
+                if options.verbose { println!("{} is ignored because it matches {}", path, rule_set_pattern.pattern) }
                 return true;
             } else {
-                if self.verbose { println!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern) }
+                if options.verbose { println!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern) }
             }
         }
         false

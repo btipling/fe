@@ -6,6 +6,11 @@ use clap::App;
 mod find;
 mod ignore;
 
+pub struct Options {
+    verbose: bool,
+    insensitive: bool,
+}
+
 fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from_yaml(yaml).get_matches();
@@ -17,5 +22,9 @@ fn main() {
     }
     let pattern = matches.value_of("input").unwrap();
     if verbose { println!("Search pattern is: {}", pattern); }
-    find::find(pattern, insensitive, verbose);
+    let options = Options {
+        verbose: verbose,
+        insensitive: insensitive,
+    };
+    find::find(pattern, &options);
 }
