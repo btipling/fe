@@ -38,28 +38,39 @@ pub fn find (input: &str, options: &super::Options) {
     };
     let mut dirs = vec![dir];
 
-    loop {
+    'search_loop: loop {
         // Get next entry or finish.
         let current_path = match dirs.pop() {
             Some(p) => { p },
-            None => { return; }
+            None => return,
+        };
+        let current_path_str = match current_path.path.to_str() {
+            Some(s) => s,
+            None => continue,
         };
 
         // Check if there's an ignore for the current directory.
         let mut rule_index = current_path.rule_index;
-        let ignore_path_str = &format!("{}/.gitignore", current_path.path.to_str().unwrap());
+        let ignore_path_str = &format!("{}/.gitignore", current_path_str);
         let ignore_path = path::Path::new(ignore_path_str);
         match ignore::RuleSet::extend(&rule_sets[rule_index], &ignore_path, options) {
             Ok(rule_set) => {
-                if options.verbose { println!("Found a .gitignore: {}", current_path.path.to_str().unwrap()); }
+                if options.verbose { println!("Found a .gitignore: {}", current_path_str); }
                 rule_sets.push(rule_set);
                 rule_index = rule_sets.len() - 1;
             },
             _ => (),
         };
 
+        let dir_entries = match current_path.path.read_dir() {
+            Ok(e) => e,
+            Err(e) => {
+                if options.verbose { println!("Failed to read directory entries for {} because {}", current_path_str, e); }
+                continue 'search_loop;
+            }
+        };
+
         // Iterate through directory entries.
-        let dir_entries = current_path.path.read_dir().unwrap();
         for dir_entry in dir_entries {
             match search_dir_entry(search, dir_entry, &mut rule_sets[rule_index], options) {
                 Some(path) => {
@@ -117,7 +128,7 @@ fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
     if verbose { println!("Matching {} against {}", path_str, input); }
 
     let mut input_chars = input.chars();
-    // `input` is guaranteed to be greater than 0 chars long.
+    // `input` is guaranteed to be greater than 0 chars long so unwrap is safe here.
     let mut current_input_char = input_chars.next().unwrap();
     let mut matching_current_word = true;
 
