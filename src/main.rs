@@ -1,8 +1,10 @@
 #[macro_use]
 extern crate clap;
+extern crate glob;
 use clap::App;
 
 mod find;
+mod ignore;
 
 fn main() {
     let yaml = load_yaml!("cli.yaml");
