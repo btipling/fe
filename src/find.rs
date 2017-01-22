@@ -26,17 +26,26 @@ pub fn find (input: &str, options: &super::Options) {
     let s = make_case_insensitive(input, options);
     let search = &s[..];
 
+    // Set up state for searching, the ignore rules and directory queue. We store ignore rules in a vector
+    // and reference them by rule_index so we don't have to store references to rules to subsequent
+    // directories we find. The rule index is associated with a directory and attached to the directory search queue.
+    // This is done because we merge .gitignore rules in root and subsequent ignore files found later in
+    // subdirectories.
     let mut rule_sets = vec![ignore::RuleSet::new_default()];
     let dir = Dir {
         path: path::PathBuf::from("./"),
         rule_index: 0,
     };
     let mut dirs = vec![dir];
+
     loop {
+        // Get next entry or finish.
         let current_path = match dirs.pop() {
             Some(p) => { p },
             None => { return; }
         };
+
+        // Check if there's an ignore for the current directory.
         let mut rule_index = current_path.rule_index;
         let ignore_path_str = &format!("{}/.gitignore", current_path.path.to_str().unwrap());
         let ignore_path = path::Path::new(ignore_path_str);
@@ -49,9 +58,10 @@ pub fn find (input: &str, options: &super::Options) {
             _ => (),
         };
 
-        let listings = current_path.path.read_dir().unwrap();
-        for listing in listings {
-            match search_listing(search, listing, &mut rule_sets[rule_index], options) {
+        // Iterate through directory entries.
+        let dir_entries = current_path.path.read_dir().unwrap();
+        for dir_entry in dir_entries {
+            match search_dir_entry(search, dir_entry, &mut rule_sets[rule_index], options) {
                 Some(path) => {
                     dirs.push(Dir {
                         path: path.path(),
@@ -64,33 +74,38 @@ pub fn find (input: &str, options: &super::Options) {
     }
 }
 
-fn search_listing(search: &str, listing: Result<fs::DirEntry, io::Error>, rule_set: &mut ignore::RuleSet, options: &super::Options) -> Option<fs::DirEntry> {
-    let entity: fs::DirEntry = listing.unwrap();
+fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, rule_set: &mut ignore::RuleSet, options: &super::Options) -> Option<fs::DirEntry> {
+    let entity: fs::DirEntry = match dir_entry {
+        Ok(entity) => entity,
+        _ => return None,
+    };
+
+    // Get and finesse entry path.
     let path = entity.path();
-    let is_dir = path.is_dir();
-    {
-        let path_str = match path.to_str() {
-            Some(mut s) => {
-                if s.starts_with("./") {
-                    s = &s[2..];
-                }
-                s
-            },
-            _ => {
-                if options.verbose { println!("Found invalid path string.") }
-                return None;
-            },
-        };
-
-        if rule_set.is_excluded(path_str, is_dir, options) {
+    let path_str = match path.to_str() {
+        Some(mut s) => {
+            if s.starts_with("./") {
+                s = &s[2..];
+            }
+            s
+        },
+        _ => {
+            if options.verbose { println!("Found invalid path string.") }
             return None;
-        }
+        },
+    };
 
-        let s = make_case_insensitive(path_str, options);
-        if path_matches_search(&s[..], search, options.verbose) {
-            println!("{}", path_str);
-        }
+    let is_dir = path.is_dir();
+    if rule_set.is_excluded(path_str, is_dir, options) {
+        return None;
     }
+
+    let s = make_case_insensitive(path_str, options);
+    if path_matches_search(&s[..], search, options.verbose) {
+        println!("{}", path_str);
+    }
+
+    // If we're looking at a directory return it to be iterated through.
     if is_dir {
         return Some(entity);
     }
