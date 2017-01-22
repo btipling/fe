@@ -39,16 +39,14 @@ pub fn find (input: &str, insensitive: bool, verbose: bool) {
         let mut rule_index = current_path.rule_index;
         let ignore_path_str = &format!("{}/.gitignore", current_path.path.to_str().unwrap());
         let ignore_path = path::Path::new(ignore_path_str);
-        {
-            match ignore::RuleSet::extend(&rule_sets[rule_index], &ignore_path, verbose) {
-                Ok(rule_set) => {
-                    if verbose { println!("Found a .gitignore: {}", current_path.path.to_str().unwrap()); }
-                    rule_sets.push(rule_set);
-                    rule_index = rule_sets.len() - 1;
-                },
-                _ => (),
-            };
-        }
+        match ignore::RuleSet::extend(&rule_sets[rule_index], &ignore_path, verbose) {
+            Ok(rule_set) => {
+                if verbose { println!("Found a .gitignore: {}", current_path.path.to_str().unwrap()); }
+                rule_sets.push(rule_set);
+                rule_index = rule_sets.len() - 1;
+            },
+            _ => (),
+        };
 
         let listings = current_path.path.read_dir().unwrap();
         'listings: for listing in listings {
