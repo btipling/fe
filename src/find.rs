@@ -26,8 +26,8 @@ pub fn find (input: &str, options: &super::Options) {
     let s = make_case_insensitive(input, options);
     let search = &s[..];
 
-    // Set up state for searching, the ignore rules and directory queue. We store ignore rules in a vector
-    // and reference them by rule_index so we don't have to store references to rules to subsequent
+    // Set up state for searching: the ignore rules and directory queue. We store ignore rules in a vector
+    // and reference them by rule_index so we don't have to store references to rules in subsequent
     // directories we find. The rule index is associated with a directory and attached to the directory search queue.
     // This is done because we merge .gitignore rules in root and subsequent ignore files found later in
     // subdirectories.
