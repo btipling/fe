@@ -1,16 +1,23 @@
 # fe
-fe is a fuzzy file finder in rust. fe's speeds are comparable to find, and often times faster. It respects .gitignores and
-is more ergonomic than using find when you just want to find a file:
+fe is a fuzzy file finder in rust. fe's speeds are comparable to find, and often times faster.
 
 ```shell
-~/p/sphela (master) $ time fe gulp
+$ fe PatchSyntax
+platform/vcs-api/src/com/intellij/openapi/diff/impl/patch/PatchSyntaxException.java
+```
+
+It respects .gitignores and is more ergonomic than using find when you just want to find a file:
+
+```shell
+$ time fe gulp
 gulpfile.js
         0.00 real         0.00 user         0.00 sys
 ```
 
-Compared with `find` on the same code base:
+Compared the same search with `find` on the same code base:
+
 ```shell
-~/p/sphela (master) $ time find . -name "gulpfile.js"
+$ time find . -name "gulpfile.js"
 ./gulpfile.js
 ./node_modules/escope/gulpfile.js
 ./node_modules/esrecurse/node_modules/estraverse/gulpfile.js
@@ -18,6 +25,14 @@ Compared with `find` on the same code base:
 ./node_modules/gulp-stylus/examples/gulpfile.js
 ./node_modules/macaddress/gulpfile.js
         0.55 real         0.02 user         0.28 sys
+```
+
+It works with unicode:
+
+```shell
+$ fe 犬
+lib/src/犬ハチ.java
+java/java-impl/src/com/intellij/internal/diGraph/impl/犬ハチ.java
 ```
 
 ## Installation
