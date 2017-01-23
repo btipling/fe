@@ -20,6 +20,15 @@ gulpfile.js
         0.55 real         0.02 user         0.28 sys
 ```
 
+## Installation
+
+```shell
+git clone https://github.com/btipling/fe.git
+cargo install
+```
+
+Homebrew and debian/aptitude packages are planned.
+
 
 ## Usage:
 
