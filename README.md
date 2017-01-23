@@ -14,7 +14,7 @@ gulpfile.js
         0.00 real         0.00 user         0.00 sys
 ```
 
-Compared the same search with `find` on the same code base:
+Compare the same search with `find` on the same code base:
 
 ```shell
 $ time find . -name "gulpfile.js"
