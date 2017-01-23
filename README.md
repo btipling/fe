@@ -1,5 +1,5 @@
 # Fe
-Fe is a fuzzy file finder in rust. Fe's speeds are comparable to find, and often times faster.
+Fe is a fuzzy file finder in rust. Use Fe to find files by their names. Fe's speeds are comparable to find, and often times faster.
 
 ```shell
 $ fe PatchSyntax
@@ -68,7 +68,7 @@ ARGS:
     <input>    Sets the pattern to search for
 ```
 
-fe finds files by unicode alpha-numeric characters. It works much like IntelliJ's fuzzy file opener.
+Fe finds files by unicode alpha-numeric characters. It works much like IntelliJ's fuzzy file opener.
 Searches start matching at word start, and on match failure stop matching until the next word. Words are separated by non-alphanumeric characters.
 
 This finds main.rs because `m` matches the first word of `main` and `rs` matches the extension from the start.
