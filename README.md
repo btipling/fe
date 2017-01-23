@@ -39,6 +39,7 @@ java/java-impl/src/com/intellij/internal/diGraph/impl/犬ハチ.java
 
 ```shell
 git clone https://github.com/btipling/fe.git
+cd fe
 cargo install
 ```
 
