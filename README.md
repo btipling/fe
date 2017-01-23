@@ -6,6 +6,10 @@ is more ergonomic than using find when you just want to find a file:
 ~/p/sphela (master) $ time fe gulp
 gulpfile.js
         0.00 real         0.00 user         0.00 sys
+```
+
+Compared with `find` on the same code base:
+```shell
 ~/p/sphela (master) $ time find . -name "gulpfile.js"
 ./gulpfile.js
 ./node_modules/escope/gulpfile.js
