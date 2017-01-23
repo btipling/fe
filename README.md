@@ -1,4 +1,4 @@
-# fe
+# fe (Iron)
 fe is a fuzzy file finder in rust. fe's speeds are comparable to find, and often times faster.
 
 ```shell
