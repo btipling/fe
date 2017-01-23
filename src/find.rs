@@ -135,28 +135,75 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
 }
 
 fn path_matches_search(path_str: &str, input: &str, options: &super::Options) -> bool {
-
+    if path_str.len() == 0 {
+        return false;
+    }
     if options.very_verbose { println!("Matching {} against {}", path_str, input); }
 
+    // ** Set pre-loop path search state.
+
+    // The `input_chars` variable is the character iterator for the search input. It is reset whenever
+    // the end of `path_chars` is reached while `match_in_progress` is true. If `input_chars`
+    // iterates to its end the path matches the input and `path_matches_search` returns true.
     let mut input_chars = input.chars();
+    // The `path_chars` variable is the character iterator for the path. It is reset to the index
+    // stored in `index_matched_at` if path_chars runs out while `match_in_progress` is true. Otherwise
+    // it is assumed this patch does not match the search input and `path_matches_search` returns false.
+    let mut path_chars = path_str.chars();
     // `input` is guaranteed to be greater than 0 chars long so unwrap is safe here.
     let mut current_input_char = input_chars.next().unwrap();
-    let mut matching_current_word = true;
 
-    for current_path_char in path_str.chars() {
+    // Words are consecutive UTF8 alphanumeric characters in a path. `matching_current_word` is how
+    // character matches are tracked one after another inside a word starting from its first
+    // character. Once character is found that doesn't match, this is set to false. Matching stops.
+    // It start again at the start of the next word in the path. Non-alphanumeric characters
+    // are still checked for matches however.
+    let mut matching_current_word = true;
+    // The `match_in_progress` variable tracks that a character starting at the
+    // beginning of a word waws matched, beginning the process of a fuzzy match. This variable
+    // is reset to false when it runs out of path characters to check.
+    let mut match_in_progress = false;
+    // The `index_matched_at` variable tracks the first path character that matched the input
+    // whether that was an alphanumeric character at the beginning of a word or a non-alphanumeric
+    // character in between words.
+    let mut index_matched_at = 0;
+
+    'pathsearch: loop {
+        let current_path_char;
+        let next_possible_path_char = path_chars.next();
+
+        if next_possible_path_char.is_some() {
+            if !match_in_progress {
+                index_matched_at +=1;
+            }
+            current_path_char = next_possible_path_char.unwrap();
+        } else {
+            if !match_in_progress {
+                return false;
+            }
+            match_in_progress = false;
+            path_chars = path_str.chars();
+            path_chars.nth(index_matched_at).unwrap();
+            input_chars = input.chars();
+            current_input_char = input_chars.next().unwrap();
+            if options.verbose { println!("Resetting search {} against {}, index {}", path_str, input, index_matched_at); }
+            continue 'pathsearch;
+        }
+
+
         let is_alphanumeric = current_path_char.is_alphanumeric();
         if !is_alphanumeric {
             // Potentially starting a new word.
             matching_current_word = true;
-            // We're not matching non-alphanumeric so continue.
         }
 
         if !matching_current_word {
-            // Current word was not matched, proceed until we get to a non-alphanumeric character.
+            // Current word was not matched, proceed until a non-alphanumeric character is found.
             continue;
         }
 
         if current_input_char == current_path_char {
+            match_in_progress = true;
             match input_chars.next() {
                 Some(c) => {
                     current_input_char = c;
@@ -167,5 +214,4 @@ fn path_matches_search(path_str: &str, input: &str, options: &super::Options) ->
             matching_current_word = false;
         }
     }
-    false
 }
