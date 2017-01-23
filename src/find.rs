@@ -123,7 +123,7 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
     }
 
     let s = make_case_insensitive(s, options);
-    if path_matches_search(&s[..], search, options) {
+    if fuzzy_path_match_search(&s[..], search, options) {
         println!("{}", path_str);
     }
 
@@ -134,7 +134,35 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
     None
 }
 
-fn path_matches_search(path_str: &str, input: &str, options: &super::Options) -> bool {
+fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options) -> bool {
+    //!
+    //! fuzz_path_match_search attempts to make a fuzzy match based on the following rules:
+    //!
+    //!     * Words are roughly consecutive UTF8 alphanumeric characters in a path.
+    //!     * Words begin at the start of the path or at the first non-alphanumeric character.
+    //!     * Non-alphanumeric characters begin words because non-alphanumeric matches must also work.
+    //!     * Matches can only begin and continue on the first character of a word.
+    //!     * Character by character matching in a word until it fails.
+    //!     * One a word has failed to match, all subsequent characters of the words are skipped.
+    //!     * The match attempts to continue on the next non-alphanumeric character, the start of the next word
+    //!         in the path.
+    //!
+    //! This fuzzy search behavior is based on how IntelliJ's open file fuzzy search works, except
+    //! that in the case of this tool, it also matches non-alphanumeric numbers.
+    //!
+    //! Example matches for the search for `shared`:
+    //!
+    //!     `src/haskell/red.hs` matches because src starts with `s`, haskell matches `ha` and `red`
+    //!         in red.hsfinishes the match.
+    //!
+    //!     `src/shared/foo.js` matches because the word shared matches the entire search path.
+    //!
+    //! Example matches for `foo.js`:
+    //!
+    //!     `src/foo/bar.js` matches because `foo` matches the `foo` and `.js` matches the `.js` in the path.
+    //!
+    //!     `src/bar/foo.json` matches because the first six characters of `foo.json` match `foo.js`.
+    //!
     if path_str.len() == 0 {
         return false;
     }
