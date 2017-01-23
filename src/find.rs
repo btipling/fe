@@ -136,7 +136,7 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
 
 fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options) -> bool {
     //!
-    //! fuzz_path_match_search attempts to make a fuzzy match based on the following rules:
+    //! `fuzzy_path_match_search` attempts to make a fuzzy match based on the following rules:
     //!
     //!     * Words are roughly consecutive UTF8 alphanumeric characters in a path.
     //!     * Words begin at the start of the path or at the first non-alphanumeric character.
