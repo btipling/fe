@@ -1,10 +1,6 @@
 # fe
-Fuzzy file finder in rust.
-
-## Info
-
-fe's speeds are comparable to find, and often times faster. It respects .gitignores and is more ergonomic than using find when you just
-want to find a file:
+fe is a fuzzy file finder in rust. fe's speeds are comparable to find, and often times faster. It respects .gitignores and
+is more ergonomic than using find when you just want to find a file:
 
 ```shell
 ~/p/sphela (master) $ time fe gulp
