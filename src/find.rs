@@ -86,13 +86,13 @@ pub fn find (input: &str, options: &super::Options) {
 }
 
 fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, rule_set: &mut ignore::RuleSet, options: &super::Options) -> Option<fs::DirEntry> {
-    let entity: fs::DirEntry = match dir_entry {
+    let dir_entry: fs::DirEntry = match dir_entry {
         Ok(entity) => entity,
         _ => return None,
     };
 
     // Get and finesse entry path.
-    let path = entity.path();
+    let path = dir_entry.path();
     let path_str = match path.to_str() {
         Some(mut s) => {
             if s.starts_with("./") {
@@ -111,21 +111,32 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
         return None;
     }
 
-    let s = make_case_insensitive(path_str, options);
-    if path_matches_search(&s[..], search, options.verbose) {
+    let mut s = path_str;
+    if options.search_names_only {
+        s = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n,
+            None => {
+                if options.verbose { println!("No file name found for {}", path_str); }
+                return None;
+            }
+        }
+    }
+
+    let s = make_case_insensitive(s, options);
+    if path_matches_search(&s[..], search, options) {
         println!("{}", path_str);
     }
 
     // If we're looking at a directory return it to be iterated through.
     if is_dir {
-        return Some(entity);
+        return Some(dir_entry);
     }
     None
 }
 
-fn path_matches_search(path_str: &str, input: &str, verbose: bool) -> bool {
+fn path_matches_search(path_str: &str, input: &str, options: &super::Options) -> bool {
 
-    if verbose { println!("Matching {} against {}", path_str, input); }
+    if options.very_verbose { println!("Matching {} against {}", path_str, input); }
 
     let mut input_chars = input.chars();
     // `input` is guaranteed to be greater than 0 chars long so unwrap is safe here.

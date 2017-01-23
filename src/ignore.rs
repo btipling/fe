@@ -99,7 +99,7 @@ impl RuleSet {
                 if options.verbose { println!("{} is ignored because it matches {}", path, rule_set_pattern.pattern) }
                 return true;
             } else {
-                if options.verbose { println!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern) }
+                if options.very_verbose { println!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern) }
             }
         }
         false

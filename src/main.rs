@@ -6,25 +6,28 @@ use clap::App;
 mod find;
 mod ignore;
 
+#[derive(Debug)]
 pub struct Options {
     verbose: bool,
+    very_verbose: bool,
     insensitive: bool,
+    search_names_only: bool,
 }
 
 fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from_yaml(yaml).get_matches();
-    let insensitive = matches.is_present("insensitive");
-    let verbose = matches.is_present("verbose");
-    if insensitive {
-    } else {
-        if verbose { println!("Searching with case sensitivity turned off."); }
-    }
+
+    // Unwrap in input is safe, clap guarantees it.
     let pattern = matches.value_of("input").unwrap();
-    if verbose { println!("Search pattern is: {}", pattern); }
+
     let options = Options {
-        verbose: verbose,
-        insensitive: insensitive,
+        verbose: matches.is_present("verbose"),
+        very_verbose: matches.is_present("very_verbose"),
+        insensitive: matches.is_present("insensitive"),
+        search_names_only: matches.is_present("name"),
     };
+    if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
+
     find::find(pattern, &options);
 }

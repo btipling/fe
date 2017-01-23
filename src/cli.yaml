@@ -10,7 +10,15 @@ args:
     - verbose:
         short: v
         long: verbose
-        help: Print additional debug information.
+        help: Print additional information during search.
+    - very_verbose:
+        short: vv
+        long: very_verbose
+        help: Print debug information during search.
+    - name:
+        short: n
+        long: name
+        help: Search name and extension only.
     - input:
         help: Sets the pattern to search for
         required: true
