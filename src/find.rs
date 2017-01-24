@@ -26,10 +26,10 @@ pub fn find (input: &str, options: &super::Options) {
     let s = make_case_insensitive(input, options);
     let search = &s[..];
 
-    // Set up state for searching: the ignore rules and directory queue. We store ignore rules in a vector
-    // and reference them by rule_index so we don't have to store references to rules in subsequent
-    // directories we find. The rule index is associated with a directory and attached to the directory search queue.
-    // This is done because we merge .gitignore rules in root and subsequent ignore files found later in
+    // Set up state for searching: the ignore rules and directory queue. Rules are stored in a vector
+    // and reference them by rule_index so it doesn't have to store references to rules in subsequent
+    // directories found. The rule index is associated with a directory and attached to the directory search queue.
+    // This is done because .gitignore rules are merged in root and subsequent ignore files found later in
     // subdirectories.
     let mut rule_sets = vec![ignore::RuleSet::new_default()];
     let dir = Dir {
@@ -142,7 +142,7 @@ fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options
     //!     * Words begin at the start of the path or at the first non-alphanumeric character.
     //!     * Non-alphanumeric characters begin words because non-alphanumeric matches must also work.
     //!     * Matches can only begin and continue on the first character of a word.
-    //!     * Character by character matching in a word until it fails.
+    //!     * Character by character matching continues in a word until it fails.
     //!     * One a word has failed to match, all subsequent characters of the words are skipped.
     //!     * The match attempts to continue on the next non-alphanumeric character, the start of the next word
     //!         in the path.
@@ -150,12 +150,12 @@ fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options
     //! This fuzzy search behavior is based on how IntelliJ's open file fuzzy search works, except
     //! that in the case of this tool, it also matches non-alphanumeric numbers.
     //!
-    //! Example matches for the search for `shared`:
+    //! Example matches for a search for the string `shared`:
     //!
     //!     `src/haskell/red.hs` matches because src starts with `s`, haskell matches `ha` and `red`
     //!         in red.hsfinishes the match.
     //!
-    //!     `src/shared/foo.js` matches because the word shared matches the entire search path.
+    //!     `src/shared/foo.js` matches because the word `shared` matches the entire search string.
     //!
     //! Example matches for `foo.js`:
     //!
@@ -172,11 +172,11 @@ fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options
 
     // The `input_chars` variable is the character iterator for the search input. It is reset whenever
     // the end of `path_chars` is reached while `match_in_progress` is true. If `input_chars`
-    // iterates to its end the path matches the input and `path_matches_search` returns true.
+    // iterates to its end the path matches the input and `fuzzy_path_match_search` returns true.
     let mut input_chars = input.chars();
     // The `path_chars` variable is the character iterator for the path. It is reset to the index
     // stored in `index_matched_at` if path_chars runs out while `match_in_progress` is true. Otherwise
-    // it is assumed this patch does not match the search input and `path_matches_search` returns false.
+    // it is assumed this patch does not match the search input and `fuzzy_path_match_search` returns false.
     let mut path_chars = path_str.chars();
     // `input` is guaranteed to be greater than 0 chars long so unwrap is safe here.
     let mut current_input_char = input_chars.next().unwrap();
@@ -196,22 +196,32 @@ fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options
     // character in between words.
     let mut index_matched_at = 0;
 
+    // The loop that iterates character by character through input and path, rewinding and retreating,
+    // as necessary. `input_chars` is sometimes rewound all the way to its beginning, `path_chars` is
+    // only ever reset to the character *after* where the last match first started.
     'pathsearch: loop {
         let current_path_char;
         let next_possible_path_char = path_chars.next();
 
         if next_possible_path_char.is_some() {
             if !match_in_progress {
-                index_matched_at +=1;
+                // This is the next character's index, not the current one, it may not exist! We catch that
+                // condition in the else if below.
+                index_matched_at += 1;
             }
             current_path_char = next_possible_path_char.unwrap();
+        } else if index_matched_at == path_str.len() {
+            // There was a match in progress, but it started at the last possible character. Matching is over.
+            return false;
         } else {
             if !match_in_progress {
+                // The loop is finished as it is has run out of characters and is not rewound as
+                // no match is in progress.
                 return false;
             }
             match_in_progress = false;
             path_chars = path_str.chars();
-            path_chars.nth(index_matched_at).unwrap();
+            path_chars.nth(index_matched_at).unwrap(); // Safe due to else if above.
             input_chars = input.chars();
             current_input_char = input_chars.next().unwrap();
             if options.verbose { println!("Resetting search {} against {}, index {}", path_str, input, index_matched_at); }

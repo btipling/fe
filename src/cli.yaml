@@ -10,11 +10,8 @@ args:
     - verbose:
         short: v
         long: verbose
-        help: Print additional information during search.
-    - very_verbose:
-        short: vv
-        long: very_verbose
-        help: Print debug information during search.
+        help: Print additional information during search. Use -vv for extra verbose debug ifnormation.
+        multiple: true
     - name:
         short: n
         long: name

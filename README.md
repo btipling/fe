@@ -6,7 +6,7 @@ $ fe PatchSyntax
 platform/vcs-api/src/com/intellij/openapi/diff/impl/patch/PatchSyntaxException.java
 ```
 
-It respects .gitignores and is more ergonomic than using find when you just want to find a file:
+It respects .gitignores and is more ergonomic than using `find` when you just want to find a file:
 
 ```shell
 $ time fe gulp
@@ -57,19 +57,19 @@ USAGE:
     fe [FLAGS] <input>
 
 FLAGS:
-    -h, --help            Prints help information
-    -i, --insensitive     Sets the filename pattern to be case insensitive
-    -n, --name            Search name and extension only.
-    -V, --version         Prints version information
-    -v, --verbose         Print additional information during search.
-    -v, --very_verbose    Print debug information during search.
+    -h, --help           Prints help information
+    -i, --insensitive    Sets the filename pattern to be case insensitive
+    -n, --name           Search name and extension only.
+    -V, --version        Prints version information
+    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
 
 ARGS:
     <input>    Sets the pattern to search for
 ```
 
 Fe finds files by unicode alpha-numeric characters. It works much like IntelliJ's fuzzy file opener.
-Searches start matching at word start, and on match failure stop matching until the next word. Words are separated by non-alphanumeric characters.
+Searches start matching at word start, and on match failure stop matching until the next word. Words are separated by UTF8
+non-alphanumeric characters.
 
 This finds main.rs because `m` matches the first word of `main` and `rs` matches the extension from the start.
 ```shell

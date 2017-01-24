@@ -23,7 +23,7 @@ fn main() {
 
     let options = Options {
         verbose: matches.is_present("verbose"),
-        very_verbose: matches.is_present("very_verbose"),
+        very_verbose: matches.occurrences_of("verbose") > 1,
         insensitive: matches.is_present("insensitive"),
         search_names_only: matches.is_present("name"),
     };
