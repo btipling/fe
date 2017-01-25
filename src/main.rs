@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate clap;
 extern crate glob;
+extern crate regex;
 use clap::App;
 
 mod find;
@@ -12,6 +13,7 @@ pub struct Options {
     very_verbose: bool,
     insensitive: bool,
     search_names_only: bool,
+    regex: bool,
 }
 
 fn main() {
@@ -26,6 +28,7 @@ fn main() {
         very_verbose: matches.occurrences_of("verbose") > 1,
         insensitive: matches.is_present("insensitive"),
         search_names_only: matches.is_present("name"),
+        regex: matches.is_present("regex"),
     };
     if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
 

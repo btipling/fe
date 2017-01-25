@@ -16,6 +16,10 @@ args:
         short: n
         long: name
         help: Search name and extension only.
+    - regex:
+        short: r
+        long: regex
+        help: Use a regular expression instead of a fuzzy search.
     - input:
         help: Sets the pattern to search for
         required: true
