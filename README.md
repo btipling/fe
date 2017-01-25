@@ -16,7 +16,6 @@ Homebrew and debian/aptitude packages with binaries are planned.
 
 ```shell
 $ fe --help
-$ fe --help
 fe 1.0
 Helps you find files with a fuzzy search.
 
