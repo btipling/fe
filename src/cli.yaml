@@ -20,6 +20,10 @@ args:
         short: r
         long: regex
         help: Use a regular expression instead of a fuzzy search.
+    - exact:
+        short: e
+        long: exact
+        help: When you want an exact match. Probably best used with -n for searching names.
     - input:
         help: Sets the pattern to search for
         required: true

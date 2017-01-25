@@ -32,18 +32,21 @@ pub fn find (input: &str, options: &super::Options) {
 
     // Set up search context for searching: the search string and regular expression if needed.
     let s = make_case_insensitive(input, options);
-    let found_regex: regex::Regex;
+    let found_regex;
     let mut search_regex = None;
-    if options.regex {
-        found_regex = match regex::Regex::new(input) {
-            Ok(r) => r,
-            Err(e) => {
-                println!("Failed to parse regular expression: {}", e);
-                return;
-            }
-        };
-        search_regex = Some(&found_regex);
-    }
+    match options.search_type {
+        super::SearchType::Regex => {
+            found_regex = match regex::Regex::new(input) {
+                Ok(r) => r,
+                Err(e) => {
+                    println!("Failed to parse regular expression: {}", e);
+                    return;
+                }
+            };
+            search_regex = Some(&found_regex);
+        },
+        _ => (),
+    };
     let search = SearchContext {
         search: &s[..],
         regex: search_regex,
@@ -151,14 +154,13 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
     }
 
     let s = make_case_insensitive(s, search.options);
-    if search.options.regex {
-        if regex_path_match_search(&s[..], search) {
-            println!("{}", path_str);
-        }
-    } else {
-        if fuzzy_path_match_search(&s[..], search) {
-            println!("{}", path_str);
-        }
+    let found = match search.options.search_type {
+        super::SearchType::Regex => regex_path_match_search(&s[..], search),
+        super::SearchType::Exact => &s[..] == search.search,
+        super::SearchType::Fuzzy => fuzzy_path_match_search(&s[..], search),
+    };
+    if found {
+        println!("{}", path_str);
     }
 
     // If we're looking at a directory return it to be iterated through.

@@ -1,6 +1,30 @@
 # Fe
 Fe is a fuzzy file finder in rust. Use Fe to find files by their names. Fe's speeds are comparable to find, and often times faster.
 
+## Usage:
+
+```shell
+$ fe --help
+$ fe --help
+fe 1.0
+Helps you find files with a fuzzy search.
+
+USAGE:
+    fe [FLAGS] <input>
+
+FLAGS:
+    -e, --exact          When you want an exact match. Probably best used with -n for searching names.
+    -h, --help           Prints help information
+    -i, --insensitive    Sets the filename pattern to be case insensitive
+    -n, --name           Search name and extension only.
+    -r, --regex          Use a regular expression instead of a fuzzy search.
+    -V, --version        Prints version information
+    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
+
+ARGS:
+    <input>    Sets the pattern to search for
+```
+
 ```shell
 $ fe PatchSyntax
 platform/vcs-api/src/com/intellij/openapi/diff/impl/patch/PatchSyntaxException.java
@@ -45,27 +69,7 @@ cargo install
 
 Homebrew and debian/aptitude packages are planned.
 
-
-## Usage:
-
-```shell
-$ fe --help
-fe 1.0
-Helps you find files with a fuzzy search.
-
-USAGE:
-    fe [FLAGS] <input>
-
-FLAGS:
-    -h, --help           Prints help information
-    -i, --insensitive    Sets the filename pattern to be case insensitive
-    -n, --name           Search name and extension only.
-    -V, --version        Prints version information
-    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
-
-ARGS:
-    <input>    Sets the pattern to search for
-```
+## Fuzzy finding
 
 Fe finds files by unicode alpha-numeric characters. It works much like IntelliJ's fuzzy file opener.
 Searches start matching at word start, and on match failure stop matching until the next word. Words are separated by UTF8
