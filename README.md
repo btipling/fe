@@ -1,6 +1,17 @@
 # Fe
 Fe is a fuzzy file finder in rust. Use Fe to find files by their names. Fe's speeds are comparable to find, and often times faster.
 
+## Installation
+
+Build with [rust](https://github.com/rust-lang/rust):
+```shell
+git clone https://github.com/btipling/fe.git
+cd fe
+cargo install
+```
+
+Homebrew and debian/aptitude packages with binaries are planned.
+
 ## Usage:
 
 ```shell
@@ -58,16 +69,6 @@ $ fe 犬
 lib/src/犬ハチ.java
 java/java-impl/src/com/intellij/internal/diGraph/impl/犬ハチ.java
 ```
-
-## Installation
-
-```shell
-git clone https://github.com/btipling/fe.git
-cd fe
-cargo install
-```
-
-Homebrew and debian/aptitude packages are planned.
 
 ## Fuzzy finding
 
