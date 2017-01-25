@@ -107,8 +107,12 @@ fn search_dir_entry(search: &str, dir_entry: Result<fs::DirEntry, io::Error>, ru
     };
 
     let is_dir = path.is_dir();
-    if rule_set.is_excluded(path_str, is_dir, options) {
-        return None;
+    if let Some(filename) = path.file_name().map(|n| n.to_str()) {
+        if rule_set.is_excluded(filename.unwrap(), is_dir, options) {
+            return None;
+        }
+    } else {
+        if options.verbose { println!("Not matching against {} as it has no filename", path_str) }
     }
 
     let mut s = path_str;
@@ -224,7 +228,7 @@ fn fuzzy_path_match_search(path_str: &str, input: &str, options: &super::Options
             path_chars.nth(index_matched_at).unwrap(); // Safe due to else if above.
             input_chars = input.chars();
             current_input_char = input_chars.next().unwrap();
-            if options.verbose { println!("Resetting search {} against {}, index {}", path_str, input, index_matched_at); }
+            if options.very_verbose { println!("Resetting search {} against {}, index {}", path_str, input, index_matched_at); }
             continue 'pathsearch;
         }
 

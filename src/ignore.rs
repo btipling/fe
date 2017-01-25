@@ -66,6 +66,9 @@ impl RuleSet {
         let mut rules: Vec<RuleSetPattern> = vec![];
         for line in buffer.lines() {
             let l = try!(line.map_err(IgnoreError::Io));
+            if l.starts_with('#') {
+                continue;
+            }
             let r = match RuleSetPattern::new(&l[..]) {
                 Ok(r) => r,
                 _ => continue // TODO: support ! rule negations.
