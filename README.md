@@ -22,7 +22,7 @@ fe 1.0.0
 Helps you find files with a fuzzy search.
 
 USAGE:
-    fe [FLAGS] [input]
+    fe [FLAGS] [pattern]
 
 FLAGS:
     -e, --exact          When you want an exact match. Probably best used with -n for searching
@@ -37,9 +37,9 @@ FLAGS:
                          information.
 
 ARGS:
-    <input>    Sets the optional pattern to search for, if omitted it shows the files in the
-               current directory. Paths that start or end with a / will result in a directory
-               listing.
+    <pattern>    Sets the optional pattern to search for, if omitted it shows the files in the
+                 current directory. Patterns that start or end with a / are treated as literal
+                 paths and will result in a directory listing, not a search.
 ```
 
 ```shell

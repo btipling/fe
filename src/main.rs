@@ -48,8 +48,8 @@ fn main() {
     };
 
 
-    // Unwrap in input is safe, clap guarantees it.
-    let pattern = match matches.value_of("input") {
+    // Unwrap in pattern is safe, clap guarantees it.
+    let pattern = match matches.value_of("pattern") {
         Some(p) => p,
         _ => {
             if options.verbose { println!("Listing files with options: {:?}", options); }
