@@ -142,4 +142,4 @@ This is a pretty specific match:
 
 ## Special thanks
 
-A big thank you to [https://github.com/ajslater](@ajslater) who provided valuable feedback.
+A big thank you to [@ajslater](https://github.com/ajslater) who provided valuable feedback.
