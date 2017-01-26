@@ -38,8 +38,8 @@ FLAGS:
 
 ARGS:
     <pattern>    Sets the optional pattern to search for, if omitted it shows the files in the
-                 current directory. Patterns that start or end with a / are treated as literal
-                 paths and will result in a directory listing, not a search.
+                 current directory. Patterns that end with a / are treated as a literal
+                 path and will result in a directory listing, not a search.
 ```
 
 ```shell

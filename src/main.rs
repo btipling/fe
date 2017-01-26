@@ -57,7 +57,8 @@ fn main() {
             return;
         },
     };
-    if pattern.starts_with('/') || pattern.ends_with('/') {
+
+    if pattern.ends_with('/') {
         find::list(pattern, &options);
         return;
     }
