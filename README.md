@@ -16,23 +16,23 @@ Homebrew and debian/aptitude packages with binaries are planned.
 
 ```shell
 $ fe --help
-fe 1.0
+fe 1.0.0
 Helps you find files with a fuzzy search.
 
 USAGE:
-    fe [FLAGS] <input>
+  fe [FLAGS] [input]
 
 FLAGS:
-    -e, --exact          When you want an exact match. Probably best used with -n for searching names.
-    -h, --help           Prints help information
-    -i, --insensitive    Sets the filename pattern to be case insensitive
-    -n, --name           Search name and extension only.
-    -r, --regex          Use a regular expression instead of a fuzzy search.
-    -V, --version        Prints version information
-    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
+  -e, --exact          When you want an exact match. Probably best used with -n for searching names.
+  -h, --help           Prints help information
+  -i, --insensitive    Sets the filename pattern to be case insensitive
+  -n, --name           Search name and extension only.
+  -r, --regex          Use a regular expression instead of a fuzzy search.
+  -V, --version        Prints version information
+  -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
 
 ARGS:
-    <input>    Sets the pattern to search for
+  <input>    Sets the optional pattern to search for, if omitted, simply shows your files in the current directory.
 ```
 
 ```shell

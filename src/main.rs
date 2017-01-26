@@ -27,8 +27,6 @@ fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from_yaml(yaml).get_matches();
 
-    // Unwrap in input is safe, clap guarantees it.
-    let pattern = matches.value_of("input").unwrap();
     let mut search_type = SearchType::Fuzzy;
     if matches.is_present("regex") {
         search_type = SearchType::Regex;
@@ -43,7 +41,18 @@ fn main() {
         search_names_only: matches.is_present("name"),
         search_type: search_type,
     };
-    if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
 
+
+    // Unwrap in input is safe, clap guarantees it.
+    let pattern = match matches.value_of("input") {
+        Some(p) => p,
+        _ => {
+            if options.verbose { println!("Listing files with options: {:?}", options); }
+            find::list(&options);
+            return;
+        },
+    };
+
+    if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
     find::find(pattern, &options);
 }

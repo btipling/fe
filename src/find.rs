@@ -22,21 +22,46 @@ struct SearchContext<'a> {
     options: &'a super::Options,
 }
 
-pub fn find (input: &str, options: &super::Options) {
-    if options.verbose { println!("Looking for: {}, insensitive: {}", input, options.insensitive); }
+pub fn list (options: &super::Options) {
+    //! Just iterates through the current directory.
+    let current_path = path::PathBuf::from("./");
+    let current_path_str = current_path.to_str().unwrap_or("");
 
-    if input.len() == 0 {
+    let dir_entries = match current_path.read_dir() {
+        Ok(e) => e,
+        Err(e) => {
+            if options.verbose { println!("Failed to read directory entries for {} because {}.", current_path_str, e); }
+            return;
+        }
+    };
+
+    for dir_entry in dir_entries {
+        if let Ok(current_pathbuf) = dir_entry  {
+            let current_path = current_pathbuf.path();
+            let mut s = current_path.to_str().unwrap_or("");
+            if s.starts_with("./") {
+                s = &s[2..];
+            }
+            println!("{}", s);
+        }
+    }
+}
+
+pub fn find (pattern: &str, options: &super::Options) {
+    if options.verbose { println!("Looking for: {}, insensitive: {}", pattern, options.insensitive); }
+
+    if pattern.len() == 0 {
         println!("No valid input given.");
         return;
     }
 
     // Set up search context for searching: the search string and regular expression if needed.
-    let s = make_case_insensitive(input, options);
+    let s = make_case_insensitive(pattern, options);
     let found_regex;
     let mut search_regex = None;
     match options.search_type {
         super::SearchType::Regex => {
-            found_regex = match regex::Regex::new(input) {
+            found_regex = match regex::Regex::new(pattern) {
                 Ok(r) => r,
                 Err(e) => {
                     println!("Failed to parse regular expression: {}", e);
