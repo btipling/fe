@@ -53,7 +53,7 @@ fn main() {
         Some(p) => p,
         _ => {
             if options.verbose { println!("Listing files with options: {:?}", options); }
-            find::list("/.", &options);
+            find::list(".", &options);
             return;
         },
     };
