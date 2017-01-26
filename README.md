@@ -32,7 +32,7 @@ FLAGS:
   -v, --verbose        Print additional information during search. Use -vv for extra verbose debug ifnormation.
 
 ARGS:
-  <input>    Sets the optional pattern to search for, if omitted, simply shows your files in the current directory.
+  <input>    Sets the optional pattern to search for, if omitted, simply shows the files in the current directory.
 ```
 
 ```shell
