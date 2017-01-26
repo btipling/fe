@@ -50,6 +50,11 @@ gulpfile.js
         0.00 real         0.00 user         0.00 sys
 ```
 
+Fe can list directories and shows colors similar to ls:
+
+![2017-01-26 at 12 11 pm](https://cloud.githubusercontent.com/assets/249641/22348470/a0f95c18-e3c0-11e6-9f60-9cee2ffc38df.png)
+
+
 Compare the same search with `find` on the same code base:
 
 ```shell
