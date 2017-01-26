@@ -17,7 +17,7 @@ Homebrew and debian/aptitude packages with binaries are planned.
 ## Usage:
 
 ```
-fe --help
+$ fe --help
 fe 1.0.0
 Helps you find files with a fuzzy search.
 
@@ -25,17 +25,21 @@ USAGE:
     fe [FLAGS] [input]
 
 FLAGS:
-    -e, --exact          When you want an exact match. Probably best used with -n for searching names.
+    -e, --exact          When you want an exact match. Probably best used with -n for searching
+                         names.
     -h, --help           Prints help information
     -i, --insensitive    Sets the filename pattern to be case insensitive
     -n, --name           Search name and extension only.
     -p, --plain          Don't print colors.
     -r, --regex          Use a regular expression instead of a fuzzy search.
     -V, --version        Prints version information
-    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug information.
+    -v, --verbose        Print additional information during search. Use -vv for extra verbose debug
+                         information.
 
 ARGS:
-    <input>    Sets the optional pattern to search for, if omitted it shows the files in the current directory.
+    <input>    Sets the optional pattern to search for, if omitted it shows the files in the
+               current directory. Paths that start or end with a / will result in a directory
+               listing.
 ```
 
 ```shell

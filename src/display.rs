@@ -8,6 +8,9 @@ pub fn print(path: &path::Path, options: &super::Options) {
     if s.starts_with("./") {
         s = &s[2..];
     }
+    if s.starts_with('/') {
+        s = &s[1..];
+    }
     if options.no_colors {
         println!("{}", s);
         return;

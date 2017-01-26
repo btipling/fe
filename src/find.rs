@@ -23,10 +23,15 @@ struct SearchContext<'a> {
     options: &'a super::Options,
 }
 
-pub fn list (options: &super::Options) {
+pub fn list (path: &str, options: &super::Options) {
     //! Just iterates through the current directory.
-    let current_path = path::PathBuf::from("./");
+    let current_path = path::PathBuf::from(path);
     let current_path_str = current_path.to_str().unwrap_or("");
+
+    if !current_path.is_dir() {
+        display::print(current_path.as_path(), options);
+        return;
+    }
 
     let dir_entries = match current_path.read_dir() {
         Ok(e) => e,

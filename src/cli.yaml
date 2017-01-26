@@ -29,6 +29,7 @@ args:
         long: plain
         help: Don't print colors.
     - input:
-        help: Sets the optional pattern to search for, if omitted it shows the files in the current directory.
+        help: "Sets the optional pattern to search for, if omitted it shows the files in the current directory.
+Paths that start or end with a / will result in a directory listing."
         required: false
         index: 1

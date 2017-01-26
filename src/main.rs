@@ -53,10 +53,14 @@ fn main() {
         Some(p) => p,
         _ => {
             if options.verbose { println!("Listing files with options: {:?}", options); }
-            find::list(&options);
+            find::list("/.", &options);
             return;
         },
     };
+    if pattern.starts_with('/') || pattern.ends_with('/') {
+        find::list(pattern, &options);
+        return;
+    }
 
     if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
     find::find(pattern, &options);
