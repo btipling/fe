@@ -1,5 +1,7 @@
 # Fe
-Fe is a fuzzy file finder in rust. Use Fe to find files by their names. Fe's speeds are comparable to find, and often times faster.
+Fe is a sophisticated, yet simple to use file listing utility. Use Fe to list files in a directory or
+to recursively find files by their names using a fuzzy pattern. Fe's speeds are comparable to
+find, and often times faster.
 
 ## Installation
 
