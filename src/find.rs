@@ -3,6 +3,7 @@ use std::fs;
 use std::path;
 use std::io;
 use ignore;
+use display;
 
 fn make_case_insensitive(input: &str, options: &super::Options) -> String {
     if !options.insensitive {
@@ -37,12 +38,7 @@ pub fn list (options: &super::Options) {
 
     for dir_entry in dir_entries {
         if let Ok(current_pathbuf) = dir_entry  {
-            let current_path = current_pathbuf.path();
-            let mut s = current_path.to_str().unwrap_or("");
-            if s.starts_with("./") {
-                s = &s[2..];
-            }
-            println!("{}", s);
+            display::print(current_pathbuf.path().as_path(), options);
         }
     }
 }
@@ -185,7 +181,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
         super::SearchType::Fuzzy => fuzzy_path_match_search(&s[..], search),
     };
     if found {
-        println!("{}", path_str);
+        display::print(path.as_path(), search.options);
     }
 
     // If we're looking at a directory return it to be iterated through.

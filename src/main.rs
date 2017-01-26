@@ -2,10 +2,13 @@
 extern crate clap;
 extern crate glob;
 extern crate regex;
+extern crate term_painter;
 use clap::App;
 
 mod find;
 mod ignore;
+mod display;
+mod fileinfo;
 
 #[derive(Debug)]
 pub enum SearchType {

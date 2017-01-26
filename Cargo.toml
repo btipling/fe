@@ -7,3 +7,4 @@ authors = ["Bjorn Tipling <bjorn@ambientchill.com>"]
 clap = { version = "~2.19.0", features = ["yaml"] }
 glob = "0.2.11"
 regex = "0.2"
+term-painter = "0.2.3"
