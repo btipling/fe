@@ -23,6 +23,7 @@ pub struct Options {
     very_verbose: bool,
     insensitive: bool,
     search_names_only: bool,
+    no_colors: bool,
     search_type: SearchType,
 }
 
@@ -42,6 +43,7 @@ fn main() {
         very_verbose: matches.occurrences_of("verbose") > 1,
         insensitive: matches.is_present("insensitive"),
         search_names_only: matches.is_present("name"),
+        no_colors: matches.is_present("plain"),
         search_type: search_type,
     };
 

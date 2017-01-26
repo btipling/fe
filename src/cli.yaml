@@ -24,6 +24,10 @@ args:
         short: e
         long: exact
         help: When you want an exact match. Probably best used with -n for searching names.
+    - plain:
+        short: p
+        long: plain
+        help: Don't print colors.
     - input:
         help: Sets the optional pattern to search for, if omitted it shows the files in the current directory.
         required: false

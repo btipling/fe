@@ -17,7 +17,7 @@ Homebrew and debian/aptitude packages with binaries are planned.
 ## Usage:
 
 ```shell
-$ fe --help
+fe --help
 fe 1.0.0
 Helps you find files with a fuzzy search.
 
@@ -29,6 +29,7 @@ FLAGS:
     -h, --help           Prints help information
     -i, --insensitive    Sets the filename pattern to be case insensitive
     -n, --name           Search name and extension only.
+    -p, --plain          Don't print colors.
     -r, --regex          Use a regular expression instead of a fuzzy search.
     -V, --version        Prints version information
     -v, --verbose        Print additional information during search. Use -vv for extra verbose debug information.
@@ -74,6 +75,17 @@ It works with unicode:
 $ fe 犬
 lib/src/犬ハチ.java
 java/java-impl/src/com/intellij/internal/diGraph/impl/犬ハチ.java
+```
+
+You can use turn off colors when you need to with -p:
+
+```shell
+~/p/r/fe (master) $ fe foo
+foo.sh
+~/p/r/fe (master) $ cat (fe -p foo)
+#!/usr/bin/env bash
+
+echo 'foo'
 ```
 
 ## Fuzzy finding
