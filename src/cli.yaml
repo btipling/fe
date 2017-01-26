@@ -10,7 +10,7 @@ args:
     - verbose:
         short: v
         long: verbose
-        help: Print additional information during search. Use -vv for extra verbose debug ifnormation.
+        help: Print additional information during search. Use -vv for extra verbose debug information.
         multiple: true
     - name:
         short: n
@@ -25,6 +25,6 @@ args:
         long: exact
         help: When you want an exact match. Probably best used with -n for searching names.
     - input:
-        help: Sets the optional pattern to search for, if omitted, simply shows your files in the current directory.
+        help: Sets the optional pattern to search for, if omitted it shows the files in the current directory.
         required: false
         index: 1
