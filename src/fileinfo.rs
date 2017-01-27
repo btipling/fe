@@ -41,5 +41,4 @@ impl FileInfo {
     pub fn is_executable(&self) -> bool {
         false
     }
-
 }
