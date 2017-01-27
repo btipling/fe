@@ -6,10 +6,6 @@ description = "Fe is a sophisticated, yet simple to use file listing utility. Us
 documentation = "https://github.com/btipling/fe/blob/master/README.md"
 homepage = "https://github.com/btipling/fe"
 license = "Apache-2.0"
-categories = ["command-line-utilities", "filesystem"]
-
-[badges]
-appveyor = { repository = "https://github.com/btipling/fe", branch = "master", service = "github" }
 
 [dependencies]
 clap = { version = "~2.19.0", features = ["yaml"] }

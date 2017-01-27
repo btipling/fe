@@ -1,6 +1,7 @@
 use std::path;
 use term_painter::ToStyle;
 use term_painter::Color::*;
+use term_painter::Attr::*;
 use fileinfo::FileInfo;
 
 pub fn print(path: &path::Path, options: &super::Options) {
@@ -20,13 +21,17 @@ pub fn print(path: &path::Path, options: &super::Options) {
         Ok(i) => i,
         Err(e) => {
             if options.verbose { println!("Error getting metadata for {}: {}", s, e) }
-            println!("{}", s);
+            println!("{}", Plain.bg(Red).fg(White).paint(s));
             return;
         }
     };
 
     if info.is_dir() {
         println!("{}", Blue.paint(s));
+    } else if info.is_symbolic_link() {
+        println!("{}", Magenta.paint(s));
+    } else if info.everyone_can_do_everything() {
+        println!("{}", Plain.bg(Green).fg(Black).paint(s));
     } else if info.is_executable() {
         println!("{}", Red.paint(s));
     } else {
