@@ -1,10 +1,19 @@
 # Fe
+
+[![Fe is on crates.io!](https://img.shields.io/crates/v/fe.svg)](https://crates.io/crates/fe)
+
 Fe is a sophisticated, yet simple to use file listing utility. Use Fe to list files in a directory or
 to recursively find files by their names using a fuzzy pattern. Fe's speeds are comparable to
 find, and often times faster.
 
 ## Installation
 
+### From cargo:
+```shell
+$ cargo install fe
+```
+
+### From source:
 Build with [rust](https://github.com/rust-lang/rust):
 ```shell
 git clone https://github.com/btipling/fe.git
