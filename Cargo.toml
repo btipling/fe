@@ -1,6 +1,6 @@
 [package]
 name = "fe"
-version = "1.0.1"
+version = "1.0.2"
 authors = ["Bjorn Tipling <bjorn@ambientchill.com>"]
 description = "Fe is a sophisticated, yet simple to use file listing utility. Use Fe to list files in a directory or to recursively find files by their names using a fuzzy pattern. Fe's speeds are comparable to find, and often times faster."
 documentation = "https://github.com/btipling/fe/blob/master/README.md"
