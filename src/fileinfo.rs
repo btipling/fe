@@ -1,12 +1,6 @@
 use std::path;
 use std::fs;
 use std::io;
-#[cfg(target_os = "macos")]
-use std::os::macos::fs::MetadataExt;
-#[cfg(target_os = "unix")]
-use std::os::unix::fs::MetadataExt;
-#[cfg(target_os = "linux")]
-use std::os::linux::fs::MetadataExt;
 
 pub struct FileInfo {
     metadata: fs::Metadata,
@@ -25,17 +19,25 @@ impl FileInfo {
         return self.metadata.is_dir();
     }
 
-    #[cfg(any(target_os = "macos", target_os = "linux"))]
+    #[cfg(target_os = "macos")]
     pub fn is_executable(&self) -> bool {
+        use std::os::macos::fs::MetadataExt;
         self.metadata.st_mode() & 0o111 > 0
     }
 
-    #[cfg(any(target_os = "unix"))]
+    #[cfg(target_os = "linux")]
     pub fn is_executable(&self) -> bool {
+        use std::os::linux::fs::MetadataExt;
+        self.metadata.st_mode() & 0o111 > 0
+    }
+
+    #[cfg(all(not(target_os = "macos"), unix))]
+    pub fn is_executable(&self) -> bool {
+        use std::os::unix::fs::MetadataExt;
         self.metadata.mode() & 0o111 > 0
     }
 
-    #[cfg(not(any(target_os = "macos", target_os = "unix", target_os = "linux")))]
+    #[cfg(not(any(target_os = "macos", target_os = "linux", unix)))]
     pub fn is_executable(&self) -> bool {
         false
     }
