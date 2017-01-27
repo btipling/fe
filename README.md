@@ -66,7 +66,7 @@ gulpfile.js
 
 Fe can list directories and shows colors similar to ls:
 
-![2017-01-26 at 12 11 pm](https://cloud.githubusercontent.com/assets/249641/22348470/a0f95c18-e3c0-11e6-9f60-9cee2ffc38df.png)
+![fe supports colors](https://cloud.githubusercontent.com/assets/249641/22361454/9fed1dfc-e40e-11e6-91f3-c93c80b70fae.png)
 
 
 Compare the same search with `find` on the same code base:
