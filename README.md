@@ -142,4 +142,5 @@ This is a pretty specific match:
 
 ## Special thanks
 
-A big thank you to [@ajslater](https://github.com/ajslater) who provided valuable feedback.
+A big thank you to [@ajslater](https://github.com/ajslater) who provided valuable feedback and also
+to [@brson](https://github.com/brson) who helped review the conditional compliation code!
