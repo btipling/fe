@@ -3,15 +3,22 @@ use term_painter::ToStyle;
 use term_painter::Color::*;
 use term_painter::Attr::*;
 use fileinfo::FileInfo;
+use std::ffi::OsStr;
 
-pub fn print(path: &path::Path, options: &super::Options) {
+pub fn print_as_path(path: &path::Path, options: &super::Options) {
     let mut s = path.to_str().unwrap_or("");
     if s.starts_with("./") {
         s = &s[2..];
     }
-    if s.starts_with('/') {
-        s = &s[1..];
-    }
+    print_path(path, s, options);
+}
+
+pub fn print_as_filename(path: &path::Path, options: &super::Options) {
+    let s = path.file_name().unwrap_or(OsStr::new("")).to_str().unwrap_or("");
+    print_path(path, s, options);
+}
+
+pub fn print_path(path: &path::Path, s: &str, options: &super::Options) {
     if options.no_colors {
         println!("{}", s);
         return;

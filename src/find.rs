@@ -29,7 +29,7 @@ pub fn list (path: &str, options: &super::Options) {
     let current_path_str = current_path.to_str().unwrap_or("");
 
     if !current_path.is_dir() {
-        display::print(current_path.as_path(), options);
+        display::print_as_filename(current_path.as_path(), options);
         return;
     }
 
@@ -43,7 +43,7 @@ pub fn list (path: &str, options: &super::Options) {
 
     for dir_entry in dir_entries {
         if let Ok(current_pathbuf) = dir_entry  {
-            display::print(current_pathbuf.path().as_path(), options);
+            display::print_as_filename(current_pathbuf.path().as_path(), options);
         }
     }
 }
@@ -186,7 +186,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
         super::SearchType::Fuzzy => fuzzy_path_match_search(&s[..], search),
     };
     if found {
-        display::print(path.as_path(), search.options);
+        display::print_as_path(path.as_path(), search.options);
     }
 
     // If we're looking at a directory return it to be iterated through.
