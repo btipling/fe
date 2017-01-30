@@ -1,5 +1,5 @@
 name: fe
-version: "1.0.1"
+version: "1.0.3"
 author: Bjorn Tipling <bjorn@ambientchill.com>
 about: Helps you find files with a fuzzy search.
 args:
