@@ -4,6 +4,7 @@ use term_painter::Color::*;
 use term_painter::Attr::*;
 use fileinfo::FileInfo;
 use std::ffi::OsStr;
+use log::*;
 
 pub fn print_as_path(path: &path::Path, options: &super::Options) {
     let mut s = path.to_str().unwrap_or("");
@@ -27,7 +28,7 @@ pub fn print_path(path: &path::Path, s: &str, options: &super::Options) {
     let info = match FileInfo::new(path) {
         Ok(i) => i,
         Err(e) => {
-            if options.verbose { println!("Error getting metadata for {}: {}", s, e) }
+            v(format!("Error getting metadata for {}: {}", s, e), options);
             println!("{}", Plain.bg(Red).fg(White).paint(s));
             return;
         }
@@ -44,4 +45,12 @@ pub fn print_path(path: &path::Path, s: &str, options: &super::Options) {
     } else {
         println!("{}", s);
     }
+}
+
+pub fn print_log_message(msg: &str) {
+    println!("  ↘️️    {}", Yellow.paint(msg));
+}
+
+pub fn print_debug_message(msg: &str) {
+    println!("  ↗️️️️    {}", BrightMagenta.paint(msg));
 }

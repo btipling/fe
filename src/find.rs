@@ -4,6 +4,7 @@ use std::path;
 use std::io;
 use ignore;
 use display;
+use log::*;
 
 fn make_case_insensitive(input: &str, options: &super::Options) -> String {
     if !options.insensitive {
@@ -36,7 +37,7 @@ pub fn list (path: &str, options: &super::Options) {
     let dir_entries = match current_path.read_dir() {
         Ok(e) => e,
         Err(e) => {
-            if options.verbose { println!("Failed to read directory entries for {} because {}.", current_path_str, e); }
+            v(format!("Failed to read directory entries for {} because {}.", current_path_str, e), options);
             return;
         }
     };
@@ -49,10 +50,10 @@ pub fn list (path: &str, options: &super::Options) {
 }
 
 pub fn find (pattern: &str, options: &super::Options) {
-    if options.verbose { println!("Looking for: {}, insensitive: {}", pattern, options.insensitive); }
+    v(format!("Looking for: {}, insensitive: {}", pattern, options.insensitive), options);
 
     if pattern.len() == 0 {
-        println!("No valid input given.");
+        v(format!("No valid input given."), options);
         return;
     }
 
@@ -65,7 +66,7 @@ pub fn find (pattern: &str, options: &super::Options) {
             found_regex = match regex::Regex::new(pattern) {
                 Ok(r) => r,
                 Err(e) => {
-                    println!("Failed to parse regular expression: {}", e);
+                    v(format!("Failed to parse regular expression: {}", e), options);
                     return;
                 }
             };
@@ -108,7 +109,7 @@ pub fn find (pattern: &str, options: &super::Options) {
         let ignore_path = path::Path::new(ignore_path_str);
         match ignore::RuleSet::extend(&rule_sets[rule_index], &ignore_path, search.options) {
             Ok(rule_set) => {
-                if search.options.verbose { println!("Found a .gitignore: {}", current_path_str); }
+                v(format!("Found a .gitignore: {}", current_path_str), search.options);
                 rule_sets.push(rule_set);
                 rule_index = rule_sets.len() - 1;
             },
@@ -118,7 +119,7 @@ pub fn find (pattern: &str, options: &super::Options) {
         let dir_entries = match current_path.path.read_dir() {
             Ok(e) => e,
             Err(e) => {
-                if search.options.verbose { println!("Failed to read directory entries for {} because {}", current_path_str, e); }
+                v(format!("Failed to read directory entries for {} because {}", current_path_str, e), search.options);
                 continue 'search_loop;
             }
         };
@@ -154,7 +155,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
             s
         },
         _ => {
-            if search.options.verbose { println!("Found invalid path string.") }
+            v(format!("Found invalid path string."), search.options);
             return None;
         },
     };
@@ -165,7 +166,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
             return None;
         }
     } else {
-        if search.options.verbose { println!("Not matching against {} as it has no filename", path_str) }
+        v(format!("Not matching against {} as it has no filename", path_str), search.options);
     }
 
     let mut s = path_str;
@@ -173,7 +174,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
         s = match path.file_name().and_then(|n| n.to_str()) {
             Some(n) => n,
             None => {
-                if search.options.verbose { println!("No file name found for {}", path_str); }
+                v(format!("No file name found for {}", path_str), search.options);
                 return None;
             }
         }
@@ -199,7 +200,7 @@ fn search_dir_entry(search: &SearchContext, dir_entry: Result<fs::DirEntry, io::
 fn regex_path_match_search(path_str: &str, search: &SearchContext) -> bool {
     let search_regex = search.regex;
     let r = search_regex.expect("Missing a regular expression!").is_match(path_str);
-    if search.options.very_verbose { println!("Regexp matching {} against {}: {}", path_str, search.search, r); }
+    vv(format!("Regexp matching {} against {}: {}", path_str, search.search, r), search.options);
     r
 }
 
@@ -237,7 +238,7 @@ fn fuzzy_path_match_search(path_str: &str, search: &SearchContext) -> bool {
     if path_str.len() == 0 {
         return false;
     }
-    if options.very_verbose { println!("Matching {} against {}", path_str, input); }
+    vv(format!("Matching {} against {}", path_str, input), options);
 
     // ** Set pre-loop path search state.
 
@@ -295,7 +296,7 @@ fn fuzzy_path_match_search(path_str: &str, search: &SearchContext) -> bool {
             path_chars.nth(index_matched_at).unwrap(); // Safe due to else if above.
             input_chars = input.chars();
             current_input_char = input_chars.next().unwrap();
-            if options.very_verbose { println!("Resetting search {} against {}, index {}", path_str, input, index_matched_at); }
+            vv(format!("Resetting search {} against {}, index {}", path_str, input, index_matched_at), search.options);
             continue 'pathsearch;
         }
 

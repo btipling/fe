@@ -9,6 +9,9 @@ mod find;
 mod ignore;
 mod display;
 mod fileinfo;
+mod log;
+
+use log::*;
 
 #[derive(Debug)]
 pub enum SearchType {
@@ -52,7 +55,7 @@ fn main() {
     let pattern = match matches.value_of("pattern") {
         Some(p) => p,
         _ => {
-            if options.verbose { println!("Listing files with options: {:?}", options); }
+            v(format!("Listing files with options: {:?}", options), &options);
             find::list(".", &options);
             return;
         },
@@ -62,7 +65,6 @@ fn main() {
         find::list(pattern, &options);
         return;
     }
-
-    if options.verbose { println!("Search pattern is: {}, options: {:?}", pattern, options); }
+    v(format!("Search pattern is: {}, options: {:?}", pattern, options), &options);
     find::find(pattern, &options);
 }

@@ -5,6 +5,7 @@ use std::io;
 use std::io::BufRead;
 use std::path;
 use std::fs;
+use log::*;
 
 #[derive(Clone)]
 pub struct RuleSet {
@@ -60,7 +61,7 @@ impl RuleSet {
     pub fn new (ignore_path: &path::Path, options: &super::Options) -> Result<RuleSet, IgnoreError> {
 
         let f = try!(fs::File::open(ignore_path).map_err(IgnoreError::Io));
-        if options.verbose { println!("Found {:?} an ignore file.", ignore_path) }
+        v(format!("Found {:?} an ignore file.", ignore_path), options);
 
         let buffer = io::BufReader::new(&f);
         let mut rules: Vec<RuleSetPattern> = vec![];
@@ -73,7 +74,7 @@ impl RuleSet {
                 Ok(r) => r,
                 _ => continue // TODO: support ! rule negations.
             };
-            if options.verbose { println!("Found rule: {}.", l) }
+            v(format!("Found rule: {}.", l), options);
             rules.push(r);
         }
 
@@ -99,10 +100,10 @@ impl RuleSet {
                 require_literal_leading_dot: false
             };
             if rule_set_pattern.pattern.matches_with(path, &match_options) {
-                if options.verbose { println!("{} is ignored because it matches {}", path, rule_set_pattern.pattern) }
+                v(format!("{} is ignored because it matches {}", path, rule_set_pattern.pattern), options);
                 return true;
             } else {
-                if options.very_verbose { println!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern) }
+                vv(format!("{} is not ignored because it doesn't match {}", path, rule_set_pattern.pattern), options);
             }
         }
         false
