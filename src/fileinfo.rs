@@ -78,7 +78,7 @@ impl FileInfo {
         metadata.st_mode()
     }
 
-    #[cfg(all(not(target_os = "macos"), unix))]
+    #[cfg(all(not(target_os = "macos"), not(target_os = "linux"), unix))]
     fn mode(metadata: &fs::Metadata) -> mode_t {
         use std::os::unix::fs::MetadataExt;
         metadata.mode()
