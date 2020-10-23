@@ -99,7 +99,7 @@ impl RuleSet {
                 require_literal_separator: false,
                 require_literal_leading_dot: false
             };
-            if rule_set_pattern.pattern.matches_with(path, &match_options) {
+            if rule_set_pattern.pattern.matches_with(path, match_options) {
                 v(format!("{} is ignored because it matches {}", path, rule_set_pattern.pattern), options);
                 return true;
             } else {
