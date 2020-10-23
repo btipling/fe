@@ -38,8 +38,8 @@ const S_IXOTH: mode_t = 1; // Execute/search permission, others.
 impl FileInfo {
 
     pub fn new(path: &path::Path) -> Result<FileInfo, io::Error> {
-        let metadata = try!(path.metadata());
-        let l_metadata = try!(path.symlink_metadata());
+        let metadata = path.metadata()?;
+        let l_metadata = path.symlink_metadata()?;
         let mode = FileInfo::mode(&metadata);
         let l_mode = FileInfo::mode(&l_metadata);
         return Ok(FileInfo {
