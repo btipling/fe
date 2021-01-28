@@ -1,6 +1,6 @@
 [package]
 name = "fe"
-version = "1.0.3"
+version = "1.0.4"
 authors = ["Bjorn Tipling <bjorn@ambientchill.com>"]
 description = "Fe is a sophisticated, yet simple to use file listing utility. Use Fe to list files in a directory or to recursively find files by their names using a fuzzy pattern. Fe's speeds are comparable to find, and often times faster."
 documentation = "https://github.com/btipling/fe/blob/master/README.md"
@@ -8,7 +8,7 @@ homepage = "https://github.com/btipling/fe"
 license = "Apache-2.0"
 
 [dependencies]
-clap = { version = "~2.19.0", features = ["yaml"] }
-glob = "0.2.11"
-regex = "0.2"
-term-painter = "0.2.3"
+clap = { version = "2.33.3", features = ["yaml"] }
+glob = "0.3.0"
+regex = "1.4.1"
+term-painter = "0.2.4"

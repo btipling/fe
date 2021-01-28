@@ -87,7 +87,7 @@ pub fn find (pattern: &str, options: &super::Options) {
     // subdirectories.
     let mut rule_sets = vec![ignore::RuleSet::new_default()];
     let dir = Dir {
-        path: path::PathBuf::from("./"),
+        path: path::PathBuf::from(&options.search_dir),
         rule_index: 0,
     };
     let mut dirs = vec![dir];

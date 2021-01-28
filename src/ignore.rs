@@ -37,7 +37,7 @@ impl RuleSetPattern {
         if path.len() == 0 {
             return Err(RuleSetError::NoLength);
         }
-        let pattern = try!(Pattern::new(path).map_err(RuleSetError::Pattern));
+        let pattern = Pattern::new(path).map_err(RuleSetError::Pattern)?;
         Ok(RuleSetPattern {
             pattern: pattern,
             is_dir: false,
@@ -60,13 +60,13 @@ impl RuleSet {
 
     pub fn new (ignore_path: &path::Path, options: &super::Options) -> Result<RuleSet, IgnoreError> {
 
-        let f = try!(fs::File::open(ignore_path).map_err(IgnoreError::Io));
+        let f = fs::File::open(ignore_path).map_err(IgnoreError::Io)?;
         v(format!("Found {:?} an ignore file.", ignore_path), options);
 
         let buffer = io::BufReader::new(&f);
         let mut rules: Vec<RuleSetPattern> = vec![];
         for line in buffer.lines() {
-            let l = try!(line.map_err(IgnoreError::Io));
+            let l = line.map_err(IgnoreError::Io)?;
             if l.starts_with('#') {
                 continue;
             }
@@ -84,7 +84,7 @@ impl RuleSet {
     }
 
     pub fn extend (rule_set: &RuleSet, ignore_path: &path::Path, options: &super::Options) -> Result<RuleSet, IgnoreError> {
-        let mut new_set = try!(RuleSet::new(ignore_path, options));
+        let mut new_set = RuleSet::new(ignore_path, options)?;
         new_set.rules.extend(rule_set.rules.clone());
         Ok(new_set)
     }
@@ -99,7 +99,7 @@ impl RuleSet {
                 require_literal_separator: false,
                 require_literal_leading_dot: false
             };
-            if rule_set_pattern.pattern.matches_with(path, &match_options) {
+            if rule_set_pattern.pattern.matches_with(path, match_options) {
                 v(format!("{} is ignored because it matches {}", path, rule_set_pattern.pattern), options);
                 return true;
             } else {

@@ -28,6 +28,7 @@ pub struct Options {
     search_names_only: bool,
     no_colors: bool,
     search_type: SearchType,
+    search_dir: String,
 }
 
 fn main() {
@@ -48,8 +49,8 @@ fn main() {
         search_names_only: matches.is_present("name"),
         no_colors: matches.is_present("plain"),
         search_type: search_type,
+        search_dir: matches.value_of("search_dir").unwrap_or("./").to_string(),
     };
-
 
     // Unwrap in pattern is safe, clap guarantees it.
     let pattern = match matches.value_of("pattern") {
