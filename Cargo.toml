@@ -11,4 +11,4 @@ license = "Apache-2.0"
 clap = { version = "3.2.18", features = ["yaml"] }
 glob = "0.3.0"
 regex = "1.4.1"
-term-painter = "0.2.4"
+term-painter = "0.3.0"
