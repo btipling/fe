@@ -27,11 +27,11 @@ Homebrew and debian/aptitude packages with binaries are planned.
 
 ```
 $ fe --help
-fe 1.0.0
+fe 1.0.4
 Helps you find files with a fuzzy search.
 
 USAGE:
-    fe [FLAGS] [pattern]
+    fe [FLAGS] [OPTIONS] [pattern]
 
 FLAGS:
     -e, --exact          When you want an exact match. Probably best used with -n for searching
@@ -45,10 +45,13 @@ FLAGS:
     -v, --verbose        Print additional information during search. Use -vv for extra verbose debug
                          information.
 
+OPTIONS:
+    -d, --directory <search_dir>    Specify the directory to search
+
 ARGS:
-    <pattern>    Sets the optional pattern to search for, if omitted it shows the files in the
-                 current directory. Patterns that end with a / are treated as literal paths and
-                 will result in a directory listing, not a search.
+    <pattern>    Sets the optional pattern to search for, if omitted it shows the files in the current directory.
+                 Patterns that end with a / are treated as literal paths and will result in a directory listing, not
+                 a search.
 ```
 
 ```shell
